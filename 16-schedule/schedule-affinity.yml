@@ -1,0 +1,36 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-pod
+  labels:
+    app: mynginx
+spec:
+  containers:
+  - name: nginx
+    image: nginx:1.15.2
+  nodeSelector:
+    disktype: ssd
+
+---
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox-pod
+  labels:
+    app: mybusybox
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    imagePullPolicy: IfNotPresent
+    command: ["/bin/sh","-c", "while true; do echo $(date); sleep 3; done"]
+  affinity:
+    podAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+      - labelSelector:
+          # 亲和pod的标签
+          matchExpressions:
+          - {key: app, operator: In, values: ["mynginx"]}
+        # 亲和依据key
+        topologyKey: disktype

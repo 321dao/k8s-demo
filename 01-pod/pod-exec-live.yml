@@ -1,0 +1,21 @@
+apiVersion: v1
+
+kind: Pod
+
+metadata:
+  name: liveness-exec
+
+spec:
+  containers:
+  - name: liveness-exec
+    image: busybox
+    imagePullPolicy: IfNotPresent
+    command: ["/bin/sh", "-c", "touch /tmp/healthy; sleep 100; rm -f /tmp/healthy; sleep 1000"]
+    livenessProbe:
+      # 探测方式exec
+      exec:
+        command: ["test", "-e", "/tmp/healthy"]
+      # 等待初始化时间
+      initialDelaySeconds: 3
+      # 探测间隔时间
+      periodSeconds: 10

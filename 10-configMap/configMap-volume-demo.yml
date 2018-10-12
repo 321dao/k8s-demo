@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: httpd-pod-vl
+
+spec:
+  containers:
+  - name: httpd
+    image: busybox
+    imagePullPolicy: IfNotPresent
+    # 复制配置文件app.toml内容作为index.html的内容
+    command: ["/bin/sh","-c", "mkdir -p /usr/share/web/; httpd -f -h /usr/share/web/ & while true; do cp /usr/config/app.toml /usr/share/web/index.html; sleep 5;done;"]
+    ports:
+    - name: httpd
+      containerPort: 80
+    volumeMounts:
+    - name: htmlfiles
+      mountPath: /usr/config/
+      readOnly: true
+
+  volumes:
+  - name: htmlfiles
+    # configMap类型存储卷，把key作为文件名，value作为文件内容映射到到容器中，在Pod启动前要先创建名为httpd-cm-file的configMap
+    configMap:
+      name: httpd-cm-file

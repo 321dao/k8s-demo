@@ -1,0 +1,48 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv001
+  labels:
+    app: pv001
+spec:
+  # nfs类型
+  nfs: 
+    path: /data/volumes/v01
+    server: 192.168.8.200
+  accessModes: ["ReadWriteMany","ReadWriteOnce"]
+  capacity:
+    storage: 2Gi
+
+---
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv002
+  labels:
+    app: pv002
+spec:
+  # nfs类型
+  nfs: 
+    path: /data/volumes/v02
+    server: 192.168.8.200
+  accessModes: ["ReadWriteMany","ReadWriteOnce"]
+  capacity:
+    storage: 2Gi
+
+---
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv003
+  labels:
+    app: pv003
+spec:
+  # nfs类型
+  nfs: 
+    path: /data/volumes/v03
+    server: 192.168.8.200
+  accessModes: ["ReadWriteMany","ReadWriteOnce"]
+  capacity:
+    storage: 2Gi

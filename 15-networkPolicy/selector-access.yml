@@ -1,0 +1,20 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: selector-ingress
+  # 管理dev名称空间下pod的网络
+  namespace: dev
+spec:
+  # 管理dev下指定的标签pod的网络
+  podSelector: 
+    matchLabels:
+      app: myapp
+
+  ingress:
+  - from:
+    # ip地址块
+    - ipBlock:
+        cidr: 10.244.0.0/16
+    # 只允许访问端口
+    # ports:
+    # - port: 80

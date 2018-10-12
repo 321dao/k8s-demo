@@ -1,0 +1,28 @@
+apiVersion: v1
+
+kind: Pod
+
+metadata:
+  name: volume-hostpath
+  labels:
+    app: httpd
+
+spec:
+  containers:
+  - name: httpd
+    image: busybox
+    imagePullPolicy: IfNotPresent
+    command: ["/bin/sh","-c", "/bin/httpd -f -h /data/web/"]
+    volumeMounts:
+    - name: htmlfiles
+      mountPath: /data/web/
+
+  # Pod固定运行在节点node01
+  nodeName: node01
+  
+  volumes:
+  - name: htmlfiles
+    # 宿主机存储路径
+    hostPath: 
+      path: /data/web/
+      type: DirectoryOrCreate

@@ -1,0 +1,53 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: httpd-svc
+spec:
+  selector:
+    app: httpd-pod
+  clusterIP: None
+  ports:
+  - name: httpd-ports
+    port: 80
+    targetPort: 80
+
+---
+
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: httpd-sts
+spec:
+  serviceName: httpd-svc
+  replicas: 2
+  selector:
+    matchLabels:
+      app: httpd-pod
+  template:
+    metadata:
+      labels:
+        app: httpd-pod
+    spec:
+      containers:
+      - name: httpd
+        image: busybox
+        imagePullPolicy: IfNotPresent
+        command: ["/bin/sh","-c", "/bin/httpd -f -h /usr/share/web/"]
+        ports:
+        - name: httpd
+          containerPort: 80
+        # 首先挂载存储卷再执行command
+        volumeMounts:
+        - name: htmlfiles
+          # 容器挂载路径，路径不存在会自动创建
+          mountPath: /usr/share/web/
+
+  # 为每个pod动态生成一个pvc，创建statefulSet之前必须先准备好pv
+  volumeClaimTemplates:
+  - metadata:
+      name: htmlfiles
+    spec:
+      accessModes: ["ReadWriteOnce"]
+      resources:
+        requests:
+          storage: 2Gi

@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+
+kind: ReplicaSet
+
+metadata:
+  name: nginx-rs
+
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      tier: frontend
+  template:
+    metadata:
+      name: nginx-pod
+      # 注意：这里标签一定要包括上面自定义的selector标签
+      labels:
+        tier: frontend
+        app: myapp
+    # 下面就是pod的spec
+    spec:
+      containers:
+      - name: nginx
+        image: nginx
+        imagePullPolicy: IfNotPresent
+        ports:
+        - name: nginx
+          containerPort: 80

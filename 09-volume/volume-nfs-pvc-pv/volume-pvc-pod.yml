@@ -1,0 +1,38 @@
+# 定义pvc资源
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: httpd-vl-pvc
+spec:
+  # 这里权限必须是pv的accessModes权限的子集
+  accessModes: ["ReadWriteOnce"]
+  resources:
+    requests:
+      storage: 2Gi
+
+---
+
+# 定义pod资源
+apiVersion: v1
+kind: Pod
+metadata:
+  name: httpd-pod
+
+spec:
+  containers:
+  - name: httpd
+    image: busybox
+    imagePullPolicy: IfNotPresent
+    command: ["/bin/sh","-c", "/bin/httpd -f -h /usr/share/web/"]
+    ports:
+    - name: httpd
+      containerPort: 80
+    volumeMounts:
+    - name: htmlfiles
+      mountPath: /usr/share/web/
+
+  volumes:
+  - name: htmlfiles
+    persistentVolumeClaim:
+      # 绑定的pvc
+      claimName: httpd-vl-pvc

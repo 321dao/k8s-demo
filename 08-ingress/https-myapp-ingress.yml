@@ -1,0 +1,23 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: myapp-tls-ingress
+  annotations:
+    # 声明使用类型：nginx、traefik、envoy，让ingress controller匹配对应的规则
+    kubernetes.io/ingress.class: "nginx"
+spec:
+  rules:
+  # 使用虚拟主机，也可以使用url映射
+  - host: demo.myapp.com
+    http:
+      paths:
+      - path:
+        backend:
+          serviceName: myapp-svc
+          servicePort: 80
+  # 证书信息
+  tls:
+  # 可以多个host
+  - hosts:
+    - demo.myapp.com
+    secretName: myapp-ingress-secret

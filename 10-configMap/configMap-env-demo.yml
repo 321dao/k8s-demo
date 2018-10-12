@@ -1,0 +1,36 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: httpd-cm-env
+# key-value
+data: {"testEnv": "configMap test", "portEnv": "8080"}
+
+---
+
+# Pod资源，不断读取环境变量值
+apiVersion: v1
+kind: Pod
+metadata:
+  name: httpd-pod-env
+
+spec:
+  containers:
+  - name: httpd
+    image: busybox
+    imagePullPolicy: IfNotPresent
+    command: ["/bin/sh","-c", "mkdir -p /usr/share/web/; httpd -f -h /usr/share/web/ & while true; do echo $TEST_ENV > /usr/share/web/index.html; sleep 5;done;"]
+    ports:
+    - name: httpd
+      containerPort: 80
+    env:
+    - name: TEST_ENV
+      valueFrom:
+        configMapKeyRef:
+          name: httpd-cm-env
+          # configMap资源的testEnv值传给容器环境变量TEST_ENV
+          key: testEnv
+    - name: Port_ENV
+      valueFrom:
+        configMapKeyRef:
+          name: httpd-cm-env
+          key: portEnv

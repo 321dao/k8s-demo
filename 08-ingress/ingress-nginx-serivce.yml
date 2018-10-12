@@ -1,0 +1,24 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: ingress-nginx
+  namespace: ingress-nginx
+  labels:
+    app.kubernetes.io/name: ingress-nginx
+    app.kubernetes.io/part-of: ingress-nginx
+spec:
+  type: NodePort
+  selector:
+    app.kubernetes.io/name: ingress-nginx
+    app.kubernetes.io/part-of: ingress-nginx
+  ports:
+    - name: http
+      port: 80
+      targetPort: 80
+      # 指定宿主机端口
+      nodePort: 30080
+    - name: https
+      port: 443
+      targetPort: 443
+      # 指定宿主机端口
+      nodePort: 30443

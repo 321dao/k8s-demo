@@ -1,0 +1,24 @@
+apiVersion: v1
+
+kind: Pod
+
+metadata:
+  name: liveness-httpget
+
+spec:
+  containers:
+  - name: mynginx
+    image: nginx
+    imagePullPolicy: IfNotPresent
+    ports:
+    - name: indexfile
+      containerPort: 80
+    livenessProbe:
+      # 探测方式httpget
+      httpGet:
+        port: indexfile
+        path: /index.html
+      # 等待初始化时间
+      initialDelaySeconds: 3
+      # 探测间隔时间
+      periodSeconds: 10

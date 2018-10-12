@@ -1,0 +1,26 @@
+apiVersion: v1
+
+kind: Pod
+
+metadata:
+  name: httpd-vl-nfs
+  labels:
+    app: httpd
+
+spec:
+  containers:
+  - name: httpd
+    image: busybox
+    imagePullPolicy: IfNotPresent
+    command: ["/bin/sh","-c", "/bin/httpd -f -h /usr/share/web/"]
+    # 首先挂载在执行command
+    volumeMounts:
+    - name: htmlfiles
+      mountPath: /usr/share/web/
+
+  volumes:
+  - name: htmlfiles
+    # nfs类型
+    nfs: 
+      path: /data/volumes/
+      server: 192.168.8.200

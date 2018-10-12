@@ -1,0 +1,44 @@
+
+# 运行模式，single:单任务，concurrent:多任务并发
+runMode = "concurrent"
+
+ # 并发协成数量，当Mode=concurrent有效
+concurrentNum = 10
+
+# 最大采集数量，0: 不限制
+maxCollectSize = 0
+
+# 是否限制下载网页速度
+isLimitSpeed = true
+# 如果限制速度，下载网页时间间隔，单位毫秒(ms)
+tickTime = 100
+
+# 是否使用持久化的已采集的网址，true:使用redis去重，false:只在内存去重
+isSaveDuplicate = false
+
+# 数据存储方式，file:保存数据到本地文件，mysql:保存数据到mysql数据库，mongo:保存数据到mongodb数据库，es:保存数据到elastic search
+saveMode  = "file"
+
+filename = "data.json"
+
+# redis配置，IsSaveDuplicate=true时有效
+[redis]
+    server = "192.168.8.200:6379"
+    password = "123456"
+
+# mysql配置
+[mysql]
+    server = "root:123456@(127.0.0.1:3306)/crawler?charset=utf8&parseTime=true"
+
+# mongodb配置
+[mongodb]
+    server = "mongodb://vison:123456@192.168.8.200:27017/crawler"
+
+# InitLogger 初始化日志
+[LogConfig]
+    #	是否输出到文件，true: 是，false:输出到控台
+    isSave = false
+    #	保存日志路径，例如："out.log"
+    filename = "out.log"
+    #	输出日志级别 debug, info, warn, error
+    level = "debug"

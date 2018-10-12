@@ -1,0 +1,19 @@
+apiVersion: v1
+
+kind: Service
+
+metadata:
+  name: nginx-svc-np
+
+spec:
+  # 这里选择器要关联到哪些Pod资源
+  selector:
+    app: nginx
+    tier: frontend
+  type: NodePort
+  ports: 
+  - name: nginx-ports
+    port: 80
+    targetPort: 80
+    # 确保节点端口没被使用过，也可不指定，让系统分配随机端口
+    nodePort: 30080

@@ -1,0 +1,30 @@
+apiVersion: v1
+
+kind: Pod
+
+metadata:
+  name: volume-empty
+  labels:
+    app: httpd
+
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    imagePullPolicy: IfNotPresent
+    command: ["/bin/sh","-c", "while true; do echo $(date) > /data/index.html; sleep 3; done"]
+    volumeMounts:
+    - name: htmlfiles
+      mountPath: /data/
+  - name: httpd
+    image: busybox
+    imagePullPolicy: IfNotPresent
+    command: ["/bin/sh","-c", "/bin/httpd -f -h /data/"]
+    volumeMounts:
+    - name: htmlfiles
+      mountPath: /data/
+
+  volumes:
+  - name: htmlfiles
+    # 临时存储，Pod删除，数据也就消失了
+    emptyDir: {}
